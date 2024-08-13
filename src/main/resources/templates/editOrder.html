@@ -59,8 +59,8 @@
         <label for="productType">Product Type:</label>
         <select id="productType" name="productType" required>
             <option th:each="type : ${productTypes}"
-                    th:value="${type}"
-                    th:text="${type}">Product Type</option>
+                    th:value="${type.id}"
+                    th:text="${type.name}">Product Type</option>
         </select>
 
         <label for="product">Product:</label>

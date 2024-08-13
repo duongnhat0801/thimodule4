@@ -2,7 +2,10 @@ package com.codegym.thi_module4.controllers;
 
 import com.codegym.thi_module4.models.Order;
 import com.codegym.thi_module4.models.Product;
+import com.codegym.thi_module4.models.ProductType;
 import com.codegym.thi_module4.services.IOrderService;
+import com.codegym.thi_module4.services.IProductService;
+import com.codegym.thi_module4.services.IProductTypeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,10 @@ public class OrderController {
 
     @Autowired
     private IOrderService orderService;
+    @Autowired
+    private IProductTypeService productTypeService;
+    @Autowired
+    private IProductService productService;
 
     @GetMapping("/orders")
     public String showOrders(@RequestParam(required = false) String startDate,
@@ -54,15 +61,20 @@ public class OrderController {
     public String showTopOrders(@RequestParam(defaultValue = "10") Integer orderCount, Model model) {
         List<Order> orders = orderService.getTopOrders(orderCount);
         model.addAttribute("orders", orders);
+
         return "orderList";
     }
     @GetMapping("/orders/edit/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
+        Iterable<ProductType> productTypes = productTypeService.findAll();
+        Iterable<Product> products = productService.findAll();
         Order order = orderService.getOrderById(id);
         if (order == null) {
             return "error";
         }
         model.addAttribute("order", order);
+        model.addAttribute("productTypes", productTypes);
+        model.addAttribute("products", products);
         return "editOrder";
     }
 
